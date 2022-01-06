@@ -10,9 +10,10 @@ import { REGISTER_RESET } from '../../store/register/types';
 
 const Register = () => {
     const dispatch = useDispatch();
-    const [, setUser] = useContext(UserContext);
+    const [user, setUser] = useContext(UserContext);
     const [loginPage, setLoginPage] = useState(false);
-    const [success, setSuccess] = useState(false);
+    const [exist, setExist] = useState('');
+    const [success, setSuccess] = useState('');
     const [initValues, setInitValues] = useState({
         email: '',
         password: '',
@@ -20,17 +21,24 @@ const Register = () => {
     const userRegistration = useSelector((state) => state.userRegister);
     const { data: reduxData, loading: reduxIsLoading, error: reduxError } = userRegistration;
     const submitHandler = () => {
-        dispatch(registration(initValues));
-        setUser({
-            email: initValues.email,
-            password: initValues.password,
-            jwtToken: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyM2U0NTY3LWU4OWItMTJkMy1hNDU2LTQyNjYxNDE3NDAwMCIsIm5hbWUiOiJ0ZXN0IHVzZXIiLCJyb2xlIjoidXNlciJ9.wfK9bryPNt3UvYL9mm0L8X33oPk82xR75ycvCAAg8xY`
-        });
-        setSuccess(true);
-        setInitValues({
-            email: '',
-            password: '',
-        });
+        console.log(user);
+        if (user.email === initValues.email) {
+            setExist('This email is already exist');
+            setSuccess('');
+        }
+        else {
+            setUser({
+                email: initValues.email,
+                password: initValues.password,
+                jwtToken: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyM2U0NTY3LWU4OWItMTJkMy1hNDU2LTQyNjYxNDE3NDAwMCIsIm5hbWUiOiJ0ZXN0IHVzZXIiLCJyb2xlIjoidXNlciJ9.wfK9bryPNt3UvYL9mm0L8X33oPk82xR75ycvCAAg8xY`
+            });
+            setSuccess('Your account successfully created in context');
+            setInitValues({
+                email: '',
+                password: '',
+            });
+            dispatch(registration(initValues));
+        }
     };
 
     const handleInputChange = (event) => {
@@ -74,9 +82,12 @@ const Register = () => {
                     <Form>
                         <h1>Register</h1>
                         <p >Create an account</p>
-                        {success &&
-                            <p style={{ color: 'green' }}>
-                                Your account successfully created in context
+                        {(success) ?
+                            (<p style={{ color: 'green' }}>
+                                {success}
+                            </p>) : exist &&
+                            <p style={{ color: 'red' }}>
+                                {exist}
                             </p>
                         }
                         {reduxData &&

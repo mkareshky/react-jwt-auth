@@ -30,6 +30,7 @@ const Login = () => {
                 email: '',
                 password: '',
             });
+            setError('');
         }
         else {
             setError('Invalid username or password, please register first');
@@ -42,6 +43,7 @@ const Login = () => {
             password: '',
         });
         removeToken();
+        setRegisterPage(false);
     }
 
     const handleInputChange = (event) => {
