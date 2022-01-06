@@ -7,7 +7,7 @@ import { TextError } from '../../helpers/TextError';
 import { getToken, removeToken, setToken } from '../../helpers/auth';
 import { UserContext } from '../../contexts/UserContext';
 import Register from '../Register';
-import { login } from '../../store/login/loginActions';
+import { login, signOut } from '../../store/login/loginActions';
 
 const Login = () => {
     const userSignIn = useSelector((state) => state.userLogin);
@@ -44,6 +44,7 @@ const Login = () => {
         });
         removeToken();
         setRegisterPage(false);
+        dispatch(signOut);
     }
 
     const handleInputChange = (event) => {
