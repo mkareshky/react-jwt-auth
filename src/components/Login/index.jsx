@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import decodeJwt from 'jwt-decode';
@@ -6,8 +7,11 @@ import { TextError } from '../../helpers/TextError';
 import { getToken, removeToken, setToken } from '../../helpers/auth';
 import { UserContext } from '../../contexts/UserContext';
 import Register from '../Register';
+import { login } from '../../store/login/loginActions';
 
 const Login = () => {
+    const userSignIn = useSelector((state) => state.userLogin);
+    const { data: reduxData, loading: reduxIsLoading, error: reduxError } = userSignIn;
     const [user,] = useContext(UserContext);
     const [registerPage, setRegisterPage] = useState(false);
     const [error, setError] = useState('');
@@ -16,8 +20,10 @@ const Login = () => {
         password: '',
     });
 
+    const dispatch = useDispatch();
     const submitHandler = () => {
         if (initValues.email === user.email && initValues.password === user.password) {
+            dispatch(login(initValues.email, initValues.password));
             setToken(user.jwtToken);
             setError('');
             setInitValues({
@@ -26,7 +32,7 @@ const Login = () => {
             });
         }
         else {
-            setError('Invalid username or password');
+            setError('Invalid username or password, please register first');
         }
     };
 
@@ -57,6 +63,21 @@ const Login = () => {
     if (getToken()) {
         return (
             <div >
+                {reduxData &&
+                    <p style={{ color: 'green' }}>
+                        Login is successfully done in store
+                    </p>
+                }
+                {reduxError &&
+                    <p style={{ color: 'red' }}>
+                        There is no API to connect
+                    </p>
+                }
+                {reduxIsLoading &&
+                    <p style={{ color: 'red' }}>
+                        Loading...
+                    </p>
+                }
                 <p >Name: {(decodeJwt(getToken())).name}</p>
                 <p >Role: {(decodeJwt(getToken())).role}</p>
                 <button

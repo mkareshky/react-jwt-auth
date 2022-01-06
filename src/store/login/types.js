@@ -1,0 +1,13 @@
+import {
+    REDUCER_ACTION_REQUEST,
+    REDUCER_ACTION_SUCCESS,
+    REDUCER_ACTION_RESET,
+    REDUCER_ACTION_FAIL
+  } from '../types';
+  
+  export const TYPE_LOGIN = 'login';
+  
+  export const LOGIN_REQUEST = `${TYPE_LOGIN}/${REDUCER_ACTION_REQUEST}`;
+  export const LOGIN_SUCCESS = `${TYPE_LOGIN}/${REDUCER_ACTION_SUCCESS}`;
+  export const LOGIN_RESET = `${TYPE_LOGIN}/${REDUCER_ACTION_RESET}`;
+  export const LOGIN_FAIL = `${TYPE_LOGIN}/${REDUCER_ACTION_FAIL}`;

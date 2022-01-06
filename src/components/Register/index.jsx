@@ -1,11 +1,15 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { TextError } from '../../helpers/TextError';
 import { UserContext } from '../../contexts/UserContext';
 import Login from '../Login';
+import { registration } from '../../store/register/registerActions';
+import { REGISTER_RESET } from '../../store/register/types';
 
 const Register = () => {
+    const dispatch = useDispatch();
     const [, setUser] = useContext(UserContext);
     const [loginPage, setLoginPage] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -13,8 +17,10 @@ const Register = () => {
         email: '',
         password: '',
     });
-
+    const userRegistration = useSelector((state) => state.userRegister);
+    const { data: reduxData, loading: reduxIsLoading, error: reduxError } = userRegistration;
     const submitHandler = () => {
+        dispatch(registration(initValues));
         setUser({
             email: initValues.email,
             password: initValues.password,
@@ -37,6 +43,10 @@ const Register = () => {
             [name]: value,
         }));
     };
+
+    useEffect(() => {
+        dispatch({ type: REGISTER_RESET });
+    }, [dispatch]);
 
     const validationSchema = Yup.object().shape({
         email: Yup.string().email('Invalid email').required('Required'),
@@ -66,7 +76,22 @@ const Register = () => {
                         <p >Create an account</p>
                         {success &&
                             <p style={{ color: 'green' }}>
-                                Your account successfully created
+                                Your account successfully created in context
+                            </p>
+                        }
+                        {reduxData &&
+                            <p style={{ color: 'green' }}>
+                                Data is successfully stored
+                            </p>
+                        }
+                        {reduxError &&
+                            <p style={{ color: 'red' }}>
+                                There is no API to connect
+                            </p>
+                        }
+                        {reduxIsLoading &&
+                            <p style={{ color: 'red' }}>
+                                Loading...
                             </p>
                         }
                         <div>
