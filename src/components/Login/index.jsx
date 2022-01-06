@@ -44,6 +44,7 @@ const Login = () => {
         });
         removeToken();
         setRegisterPage(false);
+        setError('');
         dispatch(signOut);
     }
 
